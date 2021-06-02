@@ -71,7 +71,7 @@ J += (sum(sum(Theta1(:,2:end).^2)) +  sum(sum(Theta2(:,2:end).^2)))*lambda/(2*m)
 % for sample t th elelment
 yb = new_y ; % Just rename varible
 for t = 1:m;
-    a1= X(t,:)' ;% select onces a row
+    a1= X(t,:)' ;% select once a row.
     a1  = [1;a1];
     z2 = Theta1*a1;
     a2  = sigmoid(z2);
@@ -80,17 +80,17 @@ for t = 1:m;
     a3  = sigmoid(z3);
     
     %Calculate Error 
-    yt = yb(t,:)';
+    yt = yb(t,:)'; % select once a row.
     delta_3 =  a3-yt ; 
     % Propagate Backward << 
-       delta_2 = (Theta2' * delta_3) .* sigmoidGradient([1; z2]);
+    delta_2 = (Theta2' * delta_3) .* sigmoidGradient([1; z2]);
     delta_2 = delta_2(2:end); 
-
-    dt2 = delta_3 * a2';
+    % dt2 , dt1 is partial derivative result of Cost function(J(Theta)) 
+    dt2 = delta_3 * a2'; 
     dt1 = delta_2 * a1';
- 
-    Theta2_grad = Theta2_grad + dt2;
-    Theta1_grad = Theta1_grad + dt1;
+ % Cumulative
+    Theta2_grad += dt2;
+    Theta1_grad +=Theta1_grad + dt1;
 end 
 Theta1_grad = (1/m) * Theta1_grad;
 Theta2_grad = (1/m) * Theta2_grad ;
